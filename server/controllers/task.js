@@ -43,7 +43,7 @@ const updateTask = async (req, res) => {
 
 const deleteTask = async (req, res) => {
     try {
-        const { taskId } = req.body;
+        const taskId = req.params.id;
 
         if (!taskId) return res.json({ statusCode: 400, message: 'Task ID is required' });
 
@@ -56,10 +56,20 @@ const deleteTask = async (req, res) => {
     }
 }
 
+const deleteAllTask = async (req, res) => {
+    try {
+        const response = await taskService.deleteAllTask();
+        return res.json({ statusCode: 200, message: 'All tasks are successfully deleted' });
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     getTasks,
     addTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    deleteAllTask
 }
 

@@ -2,10 +2,7 @@ const TASK = require('../models/task');
 
 const getTasks = async () => {
     try {
-        const tasks = await TASK.find().lean();
-
-        if (!tasks.length) throw ({ statusCode: 400, message: 'Collection is Empty' });
-
+        const tasks = await TASK.find().sort({ createdAt: 'desc' }).lean();
         return tasks;
     } catch (error) {
         throw error
@@ -20,7 +17,7 @@ const addTask = async (task) => {
 
         if (!result) throw ({ statusCode: 400, message: 'Invalid data receive' });
 
-        return { statusCode: 201, message: 'Successfully Added!' }
+        return { statusCode: 201, message: 'Successfully Added!', data: result }
     } catch (error) {
         throw error;
     }
@@ -57,7 +54,16 @@ const updateTask = async (task) => {
 
         if (!result) throw ({ statusCode: 400, message: 'Invalid data received' });
 
-        return { statusCode: 200, message: 'Succesfully updated!' };
+        return { statusCode: 200, message: 'Succesfully updated!', data: result };
+    } catch (error) {
+        throw error
+    }
+}
+
+const deleteAllTask = async () => {
+    try {
+        const response = await TASK.deleteMany();
+        return response;
     } catch (error) {
         throw error
     }
@@ -67,5 +73,6 @@ module.exports = {
     getTasks,
     addTask,
     deleteTask,
-    updateTask
+    updateTask,
+    deleteAllTask
 }

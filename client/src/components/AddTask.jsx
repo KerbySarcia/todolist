@@ -1,11 +1,23 @@
 import React, { useState } from 'react'
 import { PlusIcon } from '@heroicons/react/24/outline'
+import { addTask } from '../service/task';
 
-const AddTask = () => {
+const AddTask = ({ onTasks }) => {
     const [value, setValue] = useState('');
 
     const disableButton = !value.length;
-    console.log(disableButton)
+
+    const handleAddTask = async (e) => {
+        e.preventDefault();
+        try {
+            const { data: { data } } = await addTask(value);
+            onTasks(values => [data, ...values]);
+            setValue('');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const handleChange = (e) => {
         setValue(e.target.value);
     }
@@ -25,6 +37,7 @@ const AddTask = () => {
                 />
                 <button
                     disabled={disableButton}
+                    onClick={handleAddTask}
                     type='submit'
                     className={`${disableButton && 'opacity-50'} text-white h-[43.2px] w-[43.2px] bg-indigo-400`}>
                     <PlusIcon className='w-5 m-auto' />
